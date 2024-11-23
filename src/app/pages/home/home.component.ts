@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { MaterialModule } from '@/modules/material.module';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,6 +34,7 @@ export class HomeComponent {
   private dialog = inject(MatDialog);
 
   public movies: IResult[] = [];
+  public pages:number = 1;
   public categories = [
     {
       value: 'popular',
@@ -91,11 +92,16 @@ export class HomeComponent {
     const query: IQuery = {
       language: value.language || '',
       category: value.category || 'popular',
+      page: this.pages,
     };
 
     this.apiService.getMovies(query)
     .subscribe((response) => {
-      this.movies = response.results;
+      this.movies = [
+        ...this.movies,
+        ...response.results
+      ];
+      this.pages++;
     });
   }
 
@@ -182,6 +188,15 @@ export class HomeComponent {
     const dialog = this.dialog.open(MovieDetailsComponent, {
       data: this.movies[0],
     });
+  }
+
+  @HostListener('window:scroll', [])
+  onScroll(): void {
+    if (
+      window.innerHeight + window.scrollY >= document.body.scrollHeight
+    ) {
+      this.getMovies();
+    }
   }
 
 

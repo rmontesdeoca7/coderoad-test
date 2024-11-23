@@ -14,7 +14,7 @@ export class ApiService {
   private readonly apiKey = '1b501bbda107113acc653f328a2e935d';
 
   getMovies(query: IQuery): Observable<IResponse> {
-    const url = `https://api.themoviedb.org/3/movie/${query.category}?language=${query.language}&api_key=${this.apiKey}`;
+    const url = `https://api.themoviedb.org/3/movie/${query.category}?language=${query.language}&api_key=${this.apiKey}&page=${query.page}`;
     return this.httpClient.get<IResponse>(url)
   }
 
