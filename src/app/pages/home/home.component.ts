@@ -140,8 +140,6 @@ export class HomeComponent {
         break;
       case 'prime':
         const primeSet = this.prime(limit);
-        console.log('primos', primeSet);
-
         primeSet.forEach((item, index) => {
           this.movies[item -1].hasColor = true;
         });
