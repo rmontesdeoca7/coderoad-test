@@ -135,13 +135,15 @@ export class HomeComponent {
       case 'fibonacci':
         const fibSet = this.fibonacci(limit);
         fibSet.forEach((item, index) => {
-          this.movies[index].hasColor = true;
+          this.movies[item].hasColor = true;
         });
         break;
       case 'prime':
         const primeSet = this.prime(limit);
+        console.log('primos', primeSet);
+
         primeSet.forEach((item, index) => {
-          this.movies[index].hasColor = true;
+          this.movies[item -1].hasColor = true;
         });
         break;
       default:
