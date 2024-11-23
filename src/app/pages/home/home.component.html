@@ -1,4 +1,12 @@
-<main class="main container" data-bs-theme="dark">
+<app-modal
+  [title]="'Mi Modal Personalizado'"
+  [isVisible]="isModalVisible"
+  (closeModal)="hideModal()"
+>
+  <p>Este es el contenido del modal.</p>
+</app-modal>
+
+<main class="main container">
   <header class="title mt-5">TOP Movies</header>
 
   <!-- filters -->
@@ -57,12 +65,12 @@
               class="card-img-top"
               src="https://image.tmdb.org/t/p/w500/{{ item.poster_path }}"
               alt="Card image cap"
-              (click)="getMovieDetails(item)"
+              (click)="showModal()"
             >
             <div class="card-body p-0">
               <div
                 class="d-flex justify-content-between footer p-2"
-                [style.backgroundColor]="item.hasColor ? getColor() : '#131313'"
+                [style.backgroundColor]="item.hasColor ? '#FFA500' : '#131313'"
               >
                 <h5 class="font ">{{ item.title }}</h5>
                 <span>{{ item.release_date | date: 'yyyy' }}</span>

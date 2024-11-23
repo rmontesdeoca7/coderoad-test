@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
-import { MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
+import { MatDialogModule } from "@angular/material/dialog";
 
 @Component({
   templateUrl: './movie-detail.component.html',
@@ -11,7 +11,15 @@ import { MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
     MatButtonModule
   ],
   standalone: true,
+  selector: 'app-modal',
+  styleUrl: './movie-detail.component.scss',
 })
 export class MovieDetailsComponent {
-  data = inject(MAT_DIALOG_DATA);
+  @Input() title: string = '';
+  @Input() isVisible: boolean = false;
+  @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
+
+  onClose(): void {
+    this.closeModal.emit();
+  }
 }

@@ -12,6 +12,7 @@ import { IQuery, IResult } from '@/interfaces/api.interface';
 
 // modals
 import { MovieDetailsComponent } from '../modals/movie-detail.component';
+import { delay } from 'rxjs';
 
 
 @Component({
@@ -21,6 +22,7 @@ import { MovieDetailsComponent } from '../modals/movie-detail.component';
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    MovieDetailsComponent,
   ],
 
   templateUrl: './home.component.html',
@@ -35,6 +37,7 @@ export class HomeComponent {
 
   public movies: IResult[] = [];
   public pages:number = 1;
+  public pagesInit:number = 1;
   public categories = [
     {
       value: 'popular',
@@ -87,7 +90,7 @@ export class HomeComponent {
     this.getMovies();
   }
 
-  getMovies() {
+  getMovies(scroll: boolean = false) {
     const value = this.form.value as IQuery;
     const query: IQuery = {
       language: value.language || '',
@@ -96,13 +99,25 @@ export class HomeComponent {
     };
 
     this.apiService.getMovies(query)
+    .pipe(
+      delay(1000)
+    )
     .subscribe((response) => {
-      this.movies = [
-        ...this.movies,
-        ...response.results
-      ];
-      this.pages++;
-    });
+      if(scroll) {
+        this.movies = [
+          ...this.movies,
+          ...response.results
+        ];
+        this.pages++;
+        setTimeout(() => {
+          this.getOneMore = 0;
+        }, 1000);
+      }
+      else {
+        this.movies = response.results;
+      }
+      this.onChangeRules();
+    })
   }
 
   onChangeRules() {
@@ -184,19 +199,33 @@ export class HomeComponent {
   }
 
 
-  getMovieDetails(item: IResult) {
-    const dialog = this.dialog.open(MovieDetailsComponent, {
-      data: this.movies[0],
-    });
-  }
-
+  isScroll: boolean = false;
   @HostListener('window:scroll', [])
   onScroll(): void {
     if (
       window.innerHeight + window.scrollY >= document.body.scrollHeight
     ) {
-      this.getMovies();
+      this.getMoreMovies();
     }
+  }
+
+  getOneMore: number = 0;
+  getMoreMovies(): void {
+    if (this.getOneMore === 0) {
+      this.getMovies(true);
+      this.getOneMore++;
+    }
+  }
+
+  // modal
+  isModalVisible: boolean = false;
+
+  showModal(): void {
+    this.isModalVisible = true;
+  }
+
+  hideModal(): void {
+    this.isModalVisible = false;
   }
 
 
