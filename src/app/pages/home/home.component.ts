@@ -4,6 +4,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 // services
 import { ApiService } from '@/services/api.service';
 
+// interfaces
+import { IResult } from '@/interfaces/api.interface';
+
 
 @Component({
   selector: 'app-home',
@@ -11,17 +14,20 @@ import { ApiService } from '@/services/api.service';
   imports: [
     CommonModule,
   ],
+
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
+
   private apiService = inject(ApiService);
+
+  public movies: IResult[] = [];
 
   ngOnInit() {
     this.apiService.getMovies({ language: 'en', category: 'popular' })
       .subscribe((response) => {
-        console.log(response);
+        this.movies = response.results;
       });
   }
 
