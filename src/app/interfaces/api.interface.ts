@@ -28,4 +28,5 @@ export interface IResult {
   video:             boolean;
   vote_average:      number;
   vote_count:        number;
+  hasColor?:         boolean;
 }
